@@ -13,7 +13,7 @@ populateButtons(searchArray,"searchButton","#buttons");
          a.addClass(classToAdd);
          a.attr("data-type", searchArray[i]);
          a.text(searchArray[i]);
-         $(areaToAddTo).append(a);
+         $(areaToAddTo).prepend(a);
 
      }
 
@@ -22,7 +22,7 @@ populateButtons(searchArray,"searchButton","#buttons");
  $(document).on("click",".searchButton",function(){
      var type = $(this).data("type");
   
-     var queryUrl = "https://api.giphy.com/v1/gifs/search?q="+type+"&api_key=zmFE7T6prF31NJ8TI9e63vjmJmBXHQyt";
+     var queryUrl = "https://api.giphy.com/v1/gifs/search?q="+type+"&api_key=zmFE7T6prF31NJ8TI9e63vjmJmBXHQyt&limit=10";
      $.ajax({url:queryUrl,method:"GET"})
      .done(function(response){
          console.log(response);
@@ -38,9 +38,25 @@ populateButtons(searchArray,"searchButton","#buttons");
             image.attr("data-animated",animated);
             image.attr("data-state","still");
             image.addClass("searchImage");
-            searchDiv.append(p);
-            searchDiv.append(image);
-            $("#searches").append(searchDiv);
+            searchDiv.prepend(p);
+            searchDiv.prepend(image);
+            $("#searches").prepend(searchDiv);
         }
      })
- })
+            $(document).on("click",".searchImage",function(){
+                var state = $(this).data("state");
+                if(state == "still"){
+                    $(this).attr("src",$(this).data("animated"));
+                    $(this).attr("data-state","animated")
+                }
+                else {
+                    $(this).attr("src",$(this).data("still"));
+                }
+            })
+        })
+          $("#search-input").on("click",function(){
+              var newSearch = $("input").eq(0).val();
+              searchArray.push(newSearch);
+              populateButtons(searchArray,"searchButton","#buttons");
+            //   return false;
+          })
